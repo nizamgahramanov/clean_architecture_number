@@ -11,7 +11,7 @@ class GetConcreteNumberTrivia extends UseCase<NumberTrivia, Params> {
   Future<Either<Failure, NumberTrivia>> call(
     Params params,
   ) async {
-    return await repository.getConcreteNumberTrivia(params.number)!;
+    return await repository.getConcreteNumberTrivia(params.number);
   }
 }
 
