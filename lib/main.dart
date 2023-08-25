@@ -1,3 +1,4 @@
+import 'package:clean_architecture_number/common/widgets/app_timer.dart';
 import 'package:clean_architecture_number/feature/survey/presentation/widgets/dash_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,13 +39,46 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _counter = 0;
+  AppTimer appTimer = AppTimer();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+
+    appTimer.startTimer();
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    debugPrint("didChangeAppLifecycleState");
+
+    if (state == AppLifecycleState.detached) {
+      debugPrint("app is killed");
+      appTimer.stopTimer();
+    } else if (state == AppLifecycleState.resumed) {
+      debugPrint("app is resumed");
+    } else if (state == AppLifecycleState.inactive) {
+      debugPrint("inactive");
+    } else if (state == AppLifecycleState.paused) {
+      debugPrint("App paused");
+    } else {
+      debugPrint("I am undefeatable");
+    }
+  }
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   var controller = WebViewController()
@@ -86,35 +120,36 @@ class _MyHomePageState extends State<MyHomePage> {
               return Row(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("/images/person_place.png"),
                       ),
                     ),
                   ),
-                  MessageDisplay(
+                  const MessageDisplay(
                     message: 'Start searching!',
                   ),
                 ],
               );
             } else if (state is Loading) {
-              return LoadingWidget();
+              return const LoadingWidget();
             } else if (state is Loaded) {
-              return Container(
+
+              /*return Container(
                 height: MediaQuery.of(context).size.height * .17,
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Container(
-                       height:MediaQuery.of(context).size.height * .12,
+                    Container(
+                      height: MediaQuery.of(context).size.height * .12,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(Icons.ac_unit),
-                          SizedBox(
+                          const Icon(Icons.ac_unit),
+                          const SizedBox(
                             height: 4,
                           ),
                           Expanded(
@@ -130,38 +165,23 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
-                          Icon(Icons.access_time_sharp),
+                          const Icon(Icons.access_time_sharp),
                         ],
                       ),
                     ),
-                    SizedBox(width: 20,),
+                    const SizedBox(
+                      width: 20,
+                    ),
                     Expanded(
                       child: Column(
                         children: [
                           TextFormField(
                             keyboardType: TextInputType.name,
                             initialValue: "Azadliq Pr123",
-                            decoration: InputDecoration(
-                              /*prefixIcon: Column(
-                                children: [
-                                  Icon(Icons.ac_unit),
-                                  Container(
-                                    width: 10,
-                                    height: 25,
-                                    alignment: Alignment.center,
-                                    child: AdvancedLine(
-                                      direction: Axis.vertical,
-                                      line: DottedLine(gapSize: 2.0),
-                                      paintDef: Paint()
-                                        ..strokeWidth = 2.0
-                                        ..strokeCap = StrokeCap.round,
-                                    ),
-                                  ),
-                                ],
-                              ),*/
+                            decoration: const InputDecoration(
                               filled: false,
                               // contentPadding: EdgeInsets.zero,
                               enabledBorder: OutlineInputBorder(
@@ -174,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                          Divider(
+                          const Divider(
                             height: 1,
                             indent: 30,
                             thickness: 1,
@@ -182,28 +202,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           TextFormField(
                             keyboardType: TextInputType.name,
-
-                            decoration: InputDecoration(
-                              /*prefixIcon: Column(
-                                children: [
-                                  Container(
-                                    width: 10,
-                                    height: 18,
-                                    alignment: Alignment.center,
-                                    child: AdvancedLine(
-                                      direction: Axis.vertical,
-                                      line: DottedLine(gapSize: 2.0),
-                                      paintDef: Paint()
-                                        ..strokeWidth = 2.0
-                                        ..strokeCap = StrokeCap.round,
-                                    ),
-                                  ),
-                                  Icon(Icons.ac_unit),
-                                ],
-                              ),*/
-
+                            decoration: const InputDecoration(
                               filled: false,
-                              // contentPadding: EdgeInsets.zero,
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.black12, width: .5),
@@ -214,22 +214,22 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                          /*Expanded(
+                          *//*Expanded(
                               child: TextFormField(
                             keyboardType: TextInputType.name,
-                          )),*/
+                          )),*//*
                         ],
                       ),
                     )
                   ],
                 ),
-              );
+              );*/
             } else if (state is Error) {
               return MessageDisplay(
                 message: state.message,
               );
             }
-            return MessageDisplay(
+            return const MessageDisplay(
               message: 'Unbelievable!',
             );
           },
@@ -253,7 +253,7 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 3,
-      child: Center(
+      child: const Center(
         child: CircularProgressIndicator(),
       ),
     );
@@ -278,7 +278,7 @@ class MessageDisplay extends StatelessWidget {
         child: SingleChildScrollView(
           child: Text(
             message,
-            style: TextStyle(fontSize: 25),
+            style: const TextStyle(fontSize: 25),
             textAlign: TextAlign.center,
           ),
         ),

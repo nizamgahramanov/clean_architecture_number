@@ -8,7 +8,6 @@ class SurveyBloc extends Bloc<SurveyEvent, SurveyState> {
       try {
         emit(Loading());
         final survey = await getSurveyUseCase.call(NoParams());
-
         print("KLKLKKK");
         print(survey.toString());
         survey.fold(
