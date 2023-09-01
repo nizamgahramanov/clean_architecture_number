@@ -1,16 +1,18 @@
 import 'package:clean_architecture_number/common/widgets/app_timer.dart';
-import 'package:clean_architecture_number/feature/survey/presentation/widgets/dash_line.dart';
+import 'package:clean_architecture_number/facade_pattern/restaurant_keeper.dart';
+import 'package:clean_architecture_number/facade_pattern/restaurant_keeper_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'common/widgets/advanced_line.dart';
-import 'core/usecases/line.dart';
+
 import 'injection_container.dart' as di;
 import 'feature/survey/presentation/bloc/bloc.dart';
 import 'injection_container.dart';
 
 void main() async {
   await di.init();
+  RestaurantKeeper res = RestaurantKeeperImpl();
+  res.getBothRestaurant();
   runApp(const MyApp());
 }
 
@@ -134,7 +136,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             } else if (state is Loading) {
               return const LoadingWidget();
             } else if (state is Loaded) {
-
               /*return Container(
                 height: MediaQuery.of(context).size.height * .17,
                 width: MediaQuery.of(context).size.width,
@@ -214,10 +215,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                          *//*Expanded(
+                          */ /*Expanded(
                               child: TextFormField(
                             keyboardType: TextInputType.name,
-                          )),*//*
+                          )),*/ /*
                         ],
                       ),
                     )
